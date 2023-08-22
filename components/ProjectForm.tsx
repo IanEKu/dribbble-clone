@@ -29,8 +29,20 @@ const ProjectForm = ({type, session}: Props) => {
         setForm(prevState => ({...prevState, [fieldName]: value}))
     }
 
-    const handleFormSubmit = (e: React.FormEvent) => {}
-    
+    const handleFormSubmit = (e: React.FormEvent) => {
+            e.preventDefault()
+
+            setIsSubmitting(true)
+
+            try {
+                if (type === 'create') {
+                    // create project
+                }
+            } catch (error) {
+                
+            }
+    }
+
     const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
