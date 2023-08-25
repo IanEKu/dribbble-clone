@@ -1,8 +1,11 @@
+"use client"
+
 import { ProjectInterface } from "@/common.types"
 import Categories from "@/components/Categories"
 import LoadMore from "@/components/LoadMore"
 import ProjectCard from "@/components/ProjectCard"
 import { fetchAllProjects } from "@/lib/actions"
+import { useSearchParams } from "next/navigation"
 
 type ProjectSearch = {
   projectSearch: {
@@ -29,8 +32,12 @@ export const revalidate = 0
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
 
-const Home = async ({ searchParams: { category, endcursor }} : Props) => {
-  console.log(endcursor);
+const Home = async () => {
+  const searchParams = useSearchParams()
+
+  const category = searchParams.get('category') as string
+  const endcursor = searchParams.get('endcursor') as string
+
   const data = await fetchAllProjects(category, endcursor) as ProjectSearch
 
   const projectsToDisplay = data.projectSearch.edges || []
