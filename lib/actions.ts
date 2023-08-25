@@ -7,9 +7,9 @@ const apiUrl = isProduction ? process.env.NEXT_PUBLIC_GRAFBASE_API_URL || '' : '
 const apiKey = isProduction ? process.env.NEXT_PUBLIC_GRAFBASE_API_KEY || '' : 'lemmein'
 const serverUrl = isProduction ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3000'
 
-const client = new GraphQLClient(apiUrl)
+const client = new GraphQLClient(apiUrl, {headers: {'x-api-key': apiKey}})
 
-const makeGraphQLRequest = async (query: string, variables = {}) => {
+export const makeGraphQLRequest = async (query: string, variables = {}) => {
     try {
         return await client.request(query, variables)
     } catch (error) {
@@ -18,12 +18,10 @@ const makeGraphQLRequest = async (query: string, variables = {}) => {
 }
 
 export const getUser= (email: string) => {
-    client.setHeader('x-api-key', apiKey)
     return makeGraphQLRequest(getUserQuery, {email: email})
 }
 
 export const createUser= (name: string, email: string, avatarUrl: string) => {
-    client.setHeader('x-api-key', apiKey)
     const variables = {
         input: {
             name, email, avatarUrl
@@ -75,29 +73,21 @@ export const createNewProject = async (form: ProjectForm, creatorId: string, tok
 }
 
 export const fetchAllProjects =async (category?: string, endcursor?: string) => {
-    client.setHeader('x-api-key', apiKey)
-    
     const query = category ? projectsQueryFilter : projectsQuery
     const variable = {category, endcursor}
-
-    console.log(query);
-    console.log(variable);
 
     return makeGraphQLRequest(query, variable)
 }
 
 export const getProjectDetails = (id: string) => {
-    client.setHeader('x-api-key', apiKey)
     return makeGraphQLRequest(getProjectByIdQuery, {id})   
 }
 
 export const getUserProjects = (id: string, last?: number) => {
-    client.setHeader('x-api-key', apiKey)
     return makeGraphQLRequest(getProjectsOfUserQuery, {id, last})   
 }
 
 export const deleteProject = (id: string, token: string) => {
-    client.setHeader("Authorization", `Bearer ${token}`)
     return makeGraphQLRequest(deleteProjectMutation, {id})   
 }
 

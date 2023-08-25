@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from 'next/headers'
+import { getToken } from "next-auth/jwt";
+
+const secret = process.env.NEXT_AUTH_SECRET
 
 export async function GET(req:NextRequest) {
-    const jwtEncodedToken: string | undefined = cookies().get("next-auth.session-token")?.value;
-
-    return NextResponse.json({token: jwtEncodedToken}, {status: 200})
+    const token = await getToken({
+        req: req,
+        secret: secret,
+        raw: true,
+    });
+    
+    return NextResponse.json({ token }, { status: 200 });
 }
