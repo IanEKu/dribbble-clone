@@ -28,11 +28,23 @@ type Props = {
   searchParams: SearchParams
 }
 
+/**
+ * This can be used to server-side rendering 
+ * but using these props:
+ * const Home = async ({searchParams: {category, endcursor}} : Props)
+ */
 export const revalidate = 0
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
 
 const Home = async () => {
+  /**
+   * This is other way to use SSR
+   * using useSearchParams() automatically made
+   * the route became SSR
+   * note that using useSearchParams() need to declare
+   * the component as client component with "use client"
+   */ 
   const searchParams = useSearchParams()
 
   const category = searchParams.get('category') as string
